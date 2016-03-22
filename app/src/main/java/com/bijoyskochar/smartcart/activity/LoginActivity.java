@@ -27,6 +27,7 @@ public class LoginActivity extends ActivityBase {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, OrderActivity.class);
+                intent.putExtra(OrderActivity.ORDER_ID, pinCode.getText().toString());
                 startActivity(intent);
                 finish();
             }

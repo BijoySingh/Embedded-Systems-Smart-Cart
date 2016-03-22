@@ -37,13 +37,15 @@ public class OrderItemView extends RVHolder<OrderItem> {
     public void populate(OrderItem data) {
         super.populate(data);
 
-        title.setText(data.title);
+        title.setText(data.sku.title);
         weight.setText(data.getWeight());
         price.setText(data.getPrice());
         quantity.setText(LocaleManager.toString(data.quantity));
 
-        if (!data.picture.isEmpty()) {
-            ImageLoaderManager.displayImage(context, data.picture, thumbnail);
+        if (data.sku.picture != null
+                && data.sku.picture.contentEquals("null")
+                && !data.sku.picture.isEmpty()) {
+            ImageLoaderManager.displayImage(context, data.sku.picture, thumbnail);
         }
     }
 }

@@ -7,51 +7,45 @@ import org.json.JSONObject;
 
 /**
  * Order Json Item
+
+     "id": 2,
+     "sku": {
+         "id": 3,
+         "title": "Kurkure Twisters",
+         "weight": 35,
+         "price": 15,
+         "rf_id": 198,
+         "picture": null
+     },
+     "quantity": 7,
+     "order": 1
+
  * Created by BijoySingh on 3/15/2016.
  */
 public class OrderItem extends JsonModel {
+
     @JsonField
     public Integer id;
 
     @JsonField
-    public String title;
-
-    @JsonField
-    public Integer weight;
-
-    @JsonField
-    public Double price;
-
-    @JsonField
-    public String picture;
-
-    @JsonField
     public Integer quantity;
+
+    public SKUItem sku;
 
     public OrderItem(JSONObject json) throws Exception {
         super(json);
-    }
-
-    public OrderItem(String response) throws Exception {
-        super(response);
-    }
-
-    public OrderItem(String title, Integer weight, Double price, Integer quantity) {
-        this.title = title;
-        this.weight = weight;
-        this.price = price;
-        this.quantity = quantity;
+        sku = new SKUItem(json.getJSONObject("sku"));
     }
 
     public String getPrice() {
-        return "\u20B9" + price;
+        return "\u20B9" + sku.price;
     }
 
     public String getWeight() {
-        if (weight > 1000) {
-            return (weight / 1.0) + "kg";
+        if (sku.weight > 1000) {
+            return (sku.weight / 1.0) + "kg";
         } else {
-            return weight + "g";
+            return sku.weight + "g";
         }
     }
 }
