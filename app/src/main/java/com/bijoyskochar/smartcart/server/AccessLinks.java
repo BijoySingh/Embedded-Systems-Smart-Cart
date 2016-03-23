@@ -17,6 +17,14 @@ public class AccessLinks {
         return getServerUrl() + "/api/order/" + order + "/";
     }
 
+    public static String setOrderCancelled(String order) {
+        return getServerUrl() + "/api/order/" + order + "/set_cancelled/";
+    }
+
+    public static String setOrderCompleted(String order) {
+        return getServerUrl() + "/api/order/" + order + "/set_completed/";
+    }
+
     public static String setChangedItem(Integer item) {
         return getServerUrl() + "/api/item/" + item + "/update_item/";
     }

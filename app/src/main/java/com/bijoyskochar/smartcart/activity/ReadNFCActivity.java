@@ -115,4 +115,15 @@ public class ReadNFCActivity extends AppCompatActivity {
             }
         }, 1000);
     }
+
+    public void invalidChip() {
+        textViewInfo.setBackgroundColor(ResourceManager.getColor(this, R.color.secondaryText));
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                finish();
+            }
+        }, 1000);
+    }
 }

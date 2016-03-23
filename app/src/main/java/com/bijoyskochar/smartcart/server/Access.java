@@ -46,7 +46,7 @@ public class Access extends AccessManager {
                 if (order != -1) {
                     ((ReadNFCActivity) accessItem.activity).startNextActivity(order);
                 } else {
-                    Functions.makeToast(context, "Invalid Chip");
+                    ((ReadNFCActivity) accessItem.activity).invalidChip();
                 }
             }
         } catch (Exception exception) {
