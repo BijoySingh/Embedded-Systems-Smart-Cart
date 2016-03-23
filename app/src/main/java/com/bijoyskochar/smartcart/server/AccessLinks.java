@@ -6,10 +6,18 @@ package com.bijoyskochar.smartcart.server;
  */
 public class AccessLinks {
     public static String getServerUrl() {
-        return "http://smartcart.thecodershub.com/";
+        return "http://smartcart.thecodershub.com";
+    }
+
+    public static String getCreateOrderLink(String chip) {
+        return getServerUrl() + "/order/make_order/" + chip;
     }
 
     public static String getOrderItems(String order) {
-        return getServerUrl() + "api/order/" + order + "/get_items/";
+        return getServerUrl() + "/api/order/" + order + "/";
+    }
+
+    public static String setChangedItem(Integer item) {
+        return getServerUrl() + "/api/item/" + item + "/update_item/";
     }
 }

@@ -4,9 +4,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.widget.TextView;
 
 import com.bijoyskochar.smartcart.R;
 import com.bijoyskochar.smartcart.adapters.OrderAdapter;
+import com.bijoyskochar.smartcart.items.OrderInformation;
 import com.bijoyskochar.smartcart.items.OrderItem;
 import com.bijoyskochar.smartcart.server.Access;
 import com.bijoyskochar.smartcart.server.AccessIds;
@@ -19,13 +21,15 @@ import java.util.List;
 public class OrderActivity extends ActivityBase {
 
     public static final String ORDER_ID = "ORDER_ID";
-    public static final Integer TIME_REPEAT = 5000;
+    public static final Integer TIME_REPEAT = 2000;
 
+    Boolean paused = false;
     RecyclerView recyclerView;
     RecyclerView.LayoutManager layoutManager;
     OrderAdapter adapter;
-    List<OrderItem> items;
     String order;
+    TextView totalPrice;
+    OrderInformation orderInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,15 +38,19 @@ public class OrderActivity extends ActivityBase {
 
         order = getIntent().getStringExtra(ORDER_ID);
 
+        totalPrice = (TextView) findViewById(R.id.total_price);
         setupRecyclerView();
-        refreshList(new ArrayList<OrderItem>());
-        setupHandler();
     }
 
-    public void refreshList(List<OrderItem> order) {
-        items = new ArrayList<>();
-        items.addAll(order);
+    public void refreshList(OrderInformation order) {
+        orderInfo = order;
         adapter.notifyDataSetChanged();
+
+        Double price = 0.0;
+        for (OrderItem item : orderInfo.items) {
+            price += item.sku.price * item.quantity;
+        }
+        totalPrice.setText("\u20B9" + price);
     }
 
     public void setupHandler() {
@@ -50,8 +58,10 @@ public class OrderActivity extends ActivityBase {
         handler.post(new Runnable() {
             @Override
             public void run() {
-                requestItem();
-                handler.postDelayed(this, TIME_REPEAT);
+                if (!paused) {
+                    requestItem();
+                    handler.postDelayed(this, TIME_REPEAT);
+                }
             }
         });
     }
@@ -63,7 +73,11 @@ public class OrderActivity extends ActivityBase {
     }
 
     public List<OrderItem> getValues() {
-        return items;
+        if (orderInfo != null && orderInfo.items != null) {
+            return orderInfo.items;
+        }
+
+        return new ArrayList<>();
     }
 
     public void setupRecyclerView() {
@@ -77,4 +91,16 @@ public class OrderActivity extends ActivityBase {
         recyclerView.setAdapter(adapter);
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        paused = true;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        paused = false;
+        setupHandler();
+    }
 }

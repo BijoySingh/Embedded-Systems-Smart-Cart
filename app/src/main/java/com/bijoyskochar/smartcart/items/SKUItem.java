@@ -5,6 +5,8 @@ import com.github.bijoysingh.starter.json.JsonModel;
 
 import org.json.JSONObject;
 
+import java.io.Serializable;
+
 /**
      "id": 3,
      "title": "Kurkure Twisters",
@@ -15,7 +17,7 @@ import org.json.JSONObject;
 
  * Created by BijoySingh on 3/22/2016.
  */
-public class SKUItem extends JsonModel {
+public class SKUItem extends JsonModel implements Serializable {
 
     @JsonField
     public Integer id;
@@ -30,7 +32,7 @@ public class SKUItem extends JsonModel {
     public Double price;
 
     @JsonField
-    public Integer rf_id;
+    public String rfid;
 
     @JsonField
     public String picture;

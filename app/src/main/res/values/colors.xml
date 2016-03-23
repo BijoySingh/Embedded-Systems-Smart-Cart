@@ -15,5 +15,7 @@
     <color name="colorAccent">#E53935</color>
     <color name="colorAccentDark">#C62828</color>
 
+    <color name="acceptColor">#4CAF50</color>
+
     <color name="toolbarSeparator">#11000000</color>
 </resources>

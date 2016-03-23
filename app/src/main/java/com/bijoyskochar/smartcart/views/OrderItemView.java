@@ -1,13 +1,16 @@
 package com.bijoyskochar.smartcart.views;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bijoyskochar.smartcart.R;
+import com.bijoyskochar.smartcart.activity.ItemActivity;
 import com.bijoyskochar.smartcart.items.OrderItem;
+import com.bijoyskochar.smartcart.server.AccessLinks;
 import com.github.bijoysingh.starter.recyclerview.RVHolder;
 import com.github.bijoysingh.starter.util.ImageLoaderManager;
 import com.github.bijoysingh.starter.util.LocaleManager;
@@ -34,7 +37,7 @@ public class OrderItemView extends RVHolder<OrderItem> {
     }
 
     @Override
-    public void populate(OrderItem data) {
+    public void populate(final OrderItem data) {
         super.populate(data);
 
         title.setText(data.sku.title);
@@ -43,9 +46,20 @@ public class OrderItemView extends RVHolder<OrderItem> {
         quantity.setText(LocaleManager.toString(data.quantity));
 
         if (data.sku.picture != null
-                && data.sku.picture.contentEquals("null")
+                && !data.sku.picture.contentEquals("null")
                 && !data.sku.picture.isEmpty()) {
-            ImageLoaderManager.displayImage(context, data.sku.picture, thumbnail);
+            ImageLoaderManager.displayImage(context, AccessLinks.getServerUrl() + data.sku.picture, thumbnail);
+        } else {
+            thumbnail.setImageResource(R.drawable.placeholder);
         }
+
+        itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, ItemActivity.class);
+                intent.putExtra(ItemActivity.ORDER_ITEM, data);
+                context.startActivity(intent);
+            }
+        });
     }
 }

@@ -7,12 +7,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 
 import com.bijoyskochar.smartcart.R;
 
 public class LoginActivity extends ActivityBase {
 
-    View enter;
+    LinearLayout enter;
     EditText pinCode;
 
     @Override
@@ -20,7 +21,7 @@ public class LoginActivity extends ActivityBase {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        enter = findViewById(R.id.enter);
+        enter = (LinearLayout) findViewById(R.id.enter);
         pinCode = (EditText) findViewById(R.id.pin_code);
 
         enter.setOnClickListener(new View.OnClickListener() {

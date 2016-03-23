@@ -5,16 +5,14 @@ import android.util.Log;
 
 import com.android.volley.VolleyError;
 import com.bijoyskochar.smartcart.activity.OrderActivity;
-import com.bijoyskochar.smartcart.items.OrderItem;
+import com.bijoyskochar.smartcart.activity.ReadNFCActivity;
+import com.bijoyskochar.smartcart.items.OrderInformation;
+import com.github.bijoysingh.starter.Functions;
 import com.github.bijoysingh.starter.server.AccessItem;
 import com.github.bijoysingh.starter.server.AccessManager;
 
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -38,14 +36,18 @@ public class Access extends AccessManager {
         try {
             if (accessItem.type.equals(AccessIds.GET_ORDER)
                     && accessItem.activity != null) {
-                List<OrderItem> items = new ArrayList<>();
+                OrderInformation order = new OrderInformation(new JSONObject(s));
+                ((OrderActivity) accessItem.activity).refreshList(order);
+            } else if (accessItem.type.equals(AccessIds.ADD_ORDER)
+                    && accessItem.activity != null) {
                 JSONObject json = new JSONObject(s);
-                JSONArray array = json.getJSONArray("items");
-                for (Integer position = 0; position < array.length(); position++) {
-                    OrderItem item = new OrderItem(array.getJSONObject(position));
-                    items.add(item);
+                Integer order = json.getInt("order");
+
+                if (order != -1) {
+                    ((ReadNFCActivity) accessItem.activity).startNextActivity(order);
+                } else {
+                    Functions.makeToast(context, "Invalid Chip");
                 }
-                ((OrderActivity) accessItem.activity).refreshList(items);
             }
         } catch (Exception exception) {
             Log.e(Access.class.getSimpleName(), exception.getMessage(), exception);

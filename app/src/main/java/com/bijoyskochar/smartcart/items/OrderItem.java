@@ -5,6 +5,8 @@ import com.github.bijoysingh.starter.json.JsonModel;
 
 import org.json.JSONObject;
 
+import java.io.Serializable;
+
 /**
  * Order Json Item
 
@@ -22,13 +24,16 @@ import org.json.JSONObject;
 
  * Created by BijoySingh on 3/15/2016.
  */
-public class OrderItem extends JsonModel {
+public class OrderItem extends JsonModel implements Serializable {
 
     @JsonField
     public Integer id;
 
     @JsonField
     public Integer quantity;
+
+    @JsonField
+    public Integer order;
 
     public SKUItem sku;
 
