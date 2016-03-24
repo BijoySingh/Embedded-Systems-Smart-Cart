@@ -6,13 +6,14 @@ import com.github.bijoysingh.starter.json.JsonModel;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by BijoySingh on 3/23/2016.
  */
-public class OrderInformation extends JsonModel {
+public class OrderInformation extends JsonModel implements Serializable {
     @JsonField
     public Integer id;
 

@@ -78,6 +78,7 @@
                     android:inputType="number"
                     android:paddingLeft="16dp"
                     android:paddingRight="16dp"
+                    android:editable="false"
                     android:textColor="@color/tertiaryText"
                     android:textSize="18sp" />
 

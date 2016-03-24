@@ -6,6 +6,12 @@ import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.InputType;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bijoyskochar.smartcart.R;
@@ -15,7 +21,7 @@ import com.bijoyskochar.smartcart.items.OrderItem;
 import com.bijoyskochar.smartcart.server.Access;
 import com.bijoyskochar.smartcart.server.AccessIds;
 import com.bijoyskochar.smartcart.server.AccessLinks;
-import com.github.bijoysingh.starter.item.TimestampItem;
+import com.github.bijoysingh.starter.Functions;
 import com.github.bijoysingh.starter.server.AccessItem;
 import com.github.bijoysingh.starter.util.TimestampManager;
 
@@ -36,6 +42,9 @@ public class OrderActivity extends ActivityBase {
     TextView store;
     TextView created;
     OrderInformation orderInfo;
+    ImageView moneyLimit;
+
+    Integer setMoneyLimit = 10000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +56,45 @@ public class OrderActivity extends ActivityBase {
         totalPrice = (TextView) findViewById(R.id.total_price);
         store = (TextView) findViewById(R.id.store);
         created = (TextView) findViewById(R.id.created);
+        moneyLimit = (ImageView) findViewById(R.id.money_filter);
+
+        moneyLimit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                moneyFilter();
+            }
+        });
+
         setupRecyclerView();
+    }
+
+    public void moneyFilter() {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+        alertDialog.setTitle("Set Limit");
+        alertDialog.setMessage("Would you like to set a warning limit for your order?");
+
+        LayoutInflater inflater = this.getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.dialog_layout, null);
+        alertDialog.setView(dialogView);
+
+        final EditText input = (EditText) dialogView.findViewById(R.id.price);
+        input.setText("" + setMoneyLimit);
+
+        alertDialog.setPositiveButton("SET",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        setMoneyLimit = Integer.parseInt(input.getText().toString());
+                    }
+                });
+
+        alertDialog.setNegativeButton("ADD",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+        alertDialog.show();
     }
 
     public void refreshList(OrderInformation order) {

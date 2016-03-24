@@ -5,10 +5,12 @@ import com.github.bijoysingh.starter.json.JsonModel;
 
 import org.json.JSONObject;
 
+import java.io.Serializable;
+
 /**
  * Created by BijoySingh on 3/23/2016.
  */
-public class ShopItem extends JsonModel {
+public class ShopItem extends JsonModel implements Serializable {
     @JsonField
     public Integer id;
 

@@ -6,15 +6,37 @@
     android:orientation="vertical"
     tools:context="com.bijoyskochar.smartcart.activity.ReadNFCActivity">
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:padding="16dp"
-        android:text="Tap on the nfc Reader on your\n smart cart"
-        android:textAllCaps="true"
-        android:textColor="@color/white"
-        android:textSize="21sp" />
+        android:orientation="horizontal"
+        android:padding="8dp">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/google_profile"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/common_google_signin_btn_icon_dark_disabled"/>
+
+        <TextView
+            android:id="@+id/google_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="4dp"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/log_out"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="4dp"
+            android:text="LOGOUT"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+    </LinearLayout>
 
     <ImageView
         android:layout_width="match_parent"
@@ -22,6 +44,16 @@
         android:layout_weight="1"
         android:src="@drawable/nfc"
         android:tint="@color/white" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="16dp"
+        android:text="Tap on the smart cart tag"
+        android:textAllCaps="true"
+        android:textColor="@color/white"
+        android:textSize="21sp" />
 
     <TextView
         android:id="@+id/info"

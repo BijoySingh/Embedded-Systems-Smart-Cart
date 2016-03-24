@@ -13,6 +13,8 @@ import android.nfc.tech.NfcV;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,23 +22,49 @@ import com.bijoyskochar.smartcart.R;
 import com.bijoyskochar.smartcart.server.Access;
 import com.bijoyskochar.smartcart.server.AccessIds;
 import com.bijoyskochar.smartcart.server.AccessLinks;
+import com.bijoyskochar.smartcart.utils.Preferences;
 import com.github.bijoysingh.starter.server.AccessItem;
+import com.github.bijoysingh.starter.util.ImageLoaderManager;
 import com.github.bijoysingh.starter.util.ResourceManager;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 
-public class ReadNFCActivity extends AppCompatActivity {
+import de.hdodenhof.circleimageview.CircleImageView;
+
+public class ReadNFCActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
     Context context;
     NfcAdapter nfcAdapter;
     TextView textViewInfo;
     PendingIntent pendingIntent;
     IntentFilter[] intentFiltersArray;
     String[][] techListsArray;
+    TextView logOut;
+
+    TextView googleName;
+    CircleImageView googleProfile;
+    GoogleApiClient mGoogleApiClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_read_nfc);
         context = this;
+
+        Preferences preferences = new Preferences(context);
+
+        if (!preferences.isLoggedIn()) {
+            loginActivity();
+            return;
+        }
+
         textViewInfo = (TextView) findViewById(R.id.info);
+        googleName = (TextView) findViewById(R.id.google_name);
+        logOut = (TextView) findViewById(R.id.log_out);
+        googleProfile = (CircleImageView) findViewById(R.id.google_profile);
 
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
         if (nfcAdapter == null) {
@@ -61,6 +89,40 @@ public class ReadNFCActivity extends AppCompatActivity {
                 NfcF.class.getName(),
                 NfcA.class.getName(),
                 NfcB.class.getName()}};
+
+        googleName.setText(preferences.getName());
+        ImageLoaderManager.displayImage(context, preferences.getPicture(), googleProfile);
+
+
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this, this)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .build();
+
+        logOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
+                        new ResultCallback<Status>() {
+
+                            @Override
+                            public void onResult(Status status) {
+                                new Preferences(context).logout();
+                                loginActivity();
+                            }
+                        });
+            }
+        });
+    }
+
+    public void loginActivity() {
+        Intent intent = new Intent(context, LoginActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     public void onPause() {
@@ -100,6 +162,11 @@ public class ReadNFCActivity extends AppCompatActivity {
         Access access = new Access(context);
         access.get(new AccessItem(AccessLinks.getCreateOrderLink(tagId), null,
                 AccessIds.ADD_ORDER, false).setActivity(this));
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+
     }
 
     public void startNextActivity(final Integer orderId) {
