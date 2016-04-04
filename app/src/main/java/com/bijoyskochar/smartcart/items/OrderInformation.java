@@ -20,7 +20,7 @@ public class OrderInformation extends JsonModel implements Serializable {
     public ChipItem chip;
 
     @JsonField
-    public Integer cart_weight;
+    public Double cart_weight;
 
     @JsonField
     public String created;

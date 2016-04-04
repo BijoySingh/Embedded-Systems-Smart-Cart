@@ -41,6 +41,7 @@ public class OrderActivity extends ActivityBase {
     TextView totalPrice;
     TextView store;
     TextView created;
+    TextView notifications;
     OrderInformation orderInfo;
     ImageView moneyLimit;
 
@@ -57,6 +58,7 @@ public class OrderActivity extends ActivityBase {
         store = (TextView) findViewById(R.id.store);
         created = (TextView) findViewById(R.id.created);
         moneyLimit = (ImageView) findViewById(R.id.money_filter);
+        notifications = (TextView) findViewById(R.id.notifications);
 
         moneyLimit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,6 +68,37 @@ public class OrderActivity extends ActivityBase {
         });
 
         setupRecyclerView();
+    }
+
+    public void updateNotifications() {
+        notifications.setVisibility(View.GONE);
+        String notification = "";
+        Double weight = 0.0;
+        for (OrderItem item : orderInfo.items) {
+            weight += item.sku.weight * item.quantity;
+        }
+        Double cartWeight = orderInfo.cart_weight;
+        Double topLimit = 1.2 * weight;
+        Double bottomLimit = 0.8 * weight;
+        if (weight > 0.001 && cartWeight > topLimit) {
+            notifications.setVisibility(View.VISIBLE);
+            notification += "MORE CONTENT IN YOUR CART. ";
+        } else if (weight > 0.001 && cartWeight < bottomLimit) {
+            notifications.setVisibility(View.VISIBLE);
+            notification += "LESS CONTENT IN YOUR CART. ";
+        }
+
+        Double price = 0.0;
+        for (OrderItem item : orderInfo.items) {
+            price += item.sku.price * item.quantity;
+        }
+
+        if (price > setMoneyLimit) {
+            notifications.setVisibility(View.VISIBLE);
+            notification += "YOU CROSSED YOUR MONEY LIMIT. ";
+        }
+
+        notifications.setText(notification);
     }
 
     public void moneyFilter() {
@@ -108,6 +141,7 @@ public class OrderActivity extends ActivityBase {
         totalPrice.setText("\u20B9" + price);
         store.setText(orderInfo.chip.shop.name);
         created.setText("Last Updated " + TimestampManager.getTimestampItem(order.created).getTimeString(true));
+        updateNotifications();
     }
 
     public void setupHandler() {
